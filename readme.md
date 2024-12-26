@@ -43,14 +43,16 @@ spartamarket
 
 ## 실행 방법
 ### 1. 가상환경 생성 및 활성화
-python -m venv venv
+python -m venv venv   
+
 venv\Scripts\activate
 
 ### 2. 필요한 패키지 설치
 pip install -r requirements.txt
 
 ### 3. 데이터베이스 마이그레이션
-python manage.py makemigrations
+python manage.py makemigrations   
+
 python manage.py migrate
 
 ### 4. 서버 실행
