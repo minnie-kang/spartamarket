@@ -31,9 +31,8 @@ spartamarket
 ├── templates/ # HTML 템플릿
 └── spartamarket/ # 프로젝트 설정
     ├── settings.py # 프로젝트 설정 파일
-    ├── urls.py # 메인 URL 설정
-    ├── wsgi.py
-    └── asgi.py
+    └── urls.py # 메인 URL 설정
+
 
 ## 개발 환경 설정
 
@@ -43,16 +42,16 @@ spartamarket
 - 커스텀 User 모델 사용 (AUTH_USER_MODEL = 'accounts.User')
 
 ## 실행 방법
-# 1. 가상환경 생성 및 활성화
+### 1. 가상환경 생성 및 활성화
 python -m venv venv
 venv\Scripts\activate
 
-# 2. 필요한 패키지 설치
+### 2. 필요한 패키지 설치
 pip install -r requirements.txt
 
-# 3. 데이터베이스 마이그레이션
+### 3. 데이터베이스 마이그레이션
 python manage.py makemigrations
 python manage.py migrate
 
-# 4. 서버 실행
+### 4. 서버 실행
 python manage.py runserver
