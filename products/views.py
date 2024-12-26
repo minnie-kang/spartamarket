@@ -4,26 +4,24 @@ from django.contrib import messages
 from .forms import ProductForm
 from .models import Product
 
-
+# 제품 목록을 표시
 def product_list_view(request):
-    """모든 제품 목록을 표시합니다."""
     products = Product.objects.all()
     context = {
         'products': products
     }
     return render(request, 'products/product_list.html', context)
 
-
+# 새로운 제품을 생성
 @login_required
 def product_create_view(request):
-    """새로운 제품을 생성합니다."""
     if request.method == 'POST':
         form = ProductForm(
             data=request.POST,
             files=request.FILES,
             user=request.user
         )
-        
+        # 제품 정보 등록
         if form.is_valid():
             form.save()
             messages.success(request, '제품이 성공적으로 등록되었습니다.')
@@ -36,10 +34,10 @@ def product_create_view(request):
     }
     return render(request, 'products/product_form.html', context)
 
-
+# 제품의 상세 정보를 표시
 @login_required
 def product_detail_view(request, pk):
-    """제품의 상세 정보를 표시합니다."""
+    # 제품 조회 및 조회수 증감
     product = get_object_or_404(Product, pk=pk)
     product.views += 1
     product.save()
@@ -49,29 +47,29 @@ def product_detail_view(request, pk):
     }
     return render(request, 'products/product_detail.html', context)
 
-
+# 제품 정보를 수정 
 @login_required
 def product_update_view(request, pk):
-    """제품 정보를 수정합니다."""
     product = get_object_or_404(Product, pk=pk)
     
     # 작성자 확인
     if product.user != request.user:
         messages.error(request, '수정 권한이 없습니다.')
         return redirect('products:product_detail', pk=pk)
-    
+    # 기존 제품 데이터를 폼에 전달
     if request.method == 'POST':
         form = ProductForm(
             data=request.POST,
             files=request.FILES,
             instance=product
         )
+        # 제품 정보 수정
         if form.is_valid():
             form.save()
             messages.success(request, '제품이 성공적으로 수정되었습니다.')
             return redirect('products:product_detail', pk=pk)
     else:
-        # 해시태그 초기값 설정
+        # 기존 해시태그를 초기값으로 설정
         initial_hashtags = ' '.join(ht.name for ht in product.hashtags.all())
         form = ProductForm(
             instance=product,
@@ -84,10 +82,8 @@ def product_update_view(request, pk):
     }
     return render(request, 'products/product_form.html', context)
 
-
 @login_required
 def product_delete_view(request, pk):
-    """제품을 삭제합니다."""
     product = get_object_or_404(Product, pk=pk)
     
     # 작성자 확인
@@ -95,6 +91,7 @@ def product_delete_view(request, pk):
         messages.error(request, '삭제 권한이 없습니다.')
         return redirect('products:product_detail', pk=pk)
     
+    # 제품 삭제 
     if request.method == 'POST':
         product.delete()
         messages.success(request, '제품이 성공적으로 삭제되었습니다.')
@@ -105,12 +102,12 @@ def product_delete_view(request, pk):
     }
     return render(request, 'products/product_detail.html', context)
 
-
+# 제품 좋아요 토글
 @login_required
 def product_like_view(request, pk):
-    """제품 좋아요를 토글합니다."""
     product = get_object_or_404(Product, pk=pk)
     
+    # 좋아요 증감
     if request.user in product.likes.all():
         product.likes.remove(request.user)
         message = '좋아요가 취소되었습니다.'
